@@ -161,13 +161,14 @@
         .brands {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 40px;
             margin-top: 20px;
         }
 
         .brands img {
-            max-width: 150px;
-            height: auto;
+            max-width: 210px;
+            height: 150px;
             border-radius: 10px;
             border: 2px solid #FFD700;
             transition: transform 0.3s ease;
@@ -175,6 +176,7 @@
 
         .brands img:hover {
             transform: scale(1.1);
+            transition: transform 0.3s ease;
         }
 
         .contact-form {
@@ -271,6 +273,7 @@
         <section>
             <h2>Our Partners</h2>
             <div class="brands">
+                <img src="https://logos-world.net/wp-content/uploads/2021/12/Epic-Games-Emblem.png" alt="Epic Games Logo" class="brand-logo">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Fortnite_F_lettermark_logo.png" alt="Fortnite">
             </div>
         </section>
@@ -326,3 +329,4 @@
     </script>
 </body>
 </html>
+
