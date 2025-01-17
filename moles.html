@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moles Game - Levelox Studios</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #FFD700;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #FFD700;
+            padding: 10px;
+            color: #000;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
+        }
+
+        .nav-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-bar a {
+            color: #000;
+            background-color: #FFD700;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-bar a:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        .content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .game-controls {
+            margin-bottom: 20px;
+        }
+
+        .game-controls button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #000;
+            background-color: #FFD700;
+            border: 2px solid #000;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .game-controls button:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 10px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .mole {
+            width: 100px;
+            height: 100px;
+            background-color: #333;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #FFD700;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .mole.active {
+            background-color: #FFD700;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .status-bar {
+            margin: 20px 0;
+        }
+
+        .status-bar p {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .how-to-play {
+            margin: 30px auto;
+            padding: 20px;
+            max-width: 600px;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            background-color: #111;
+            color: #FFD700;
+            text-align: left;
+        }
+
+        .game-over-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #111;
+            border: 4px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+            color: #FFD700;
+        }
+
+        .game-over-popup h2 {
+            margin-bottom: 10px;
+        }
+
+        .game-over-popup button {
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #000;
+            background-color: #FFD700;
+            border: 2px solid #000;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .game-over-popup button:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid #FFD700;
+        }
+
+        footer a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Levelox Studios</div>
+        <div class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
+            <a href="webgames.html">WebGames</a>
+            <a href="team.html">Team</a>
+            <a href="about.html">About</a>
+        </div>
+    </header>
+
+    <div class="content">
+        <h1>Moles Game</h1>
+
+        <!-- Game Controls -->
+        <div class="game-controls">
+            <button id="startButton">Start</button>
+            <button id="restartButton">Restart</button>
+        </div>
+
+        <!-- Game Status -->
+        <div class="status-bar">
+            <p id="score">Score: 0</p>
+            <p id="lives">Lives: 3</p>
+        </div>
+
+        <!-- Game Board -->
+        <div class="game-container" id="gameBoard">
+            <!-- Mole placeholders will be populated by JavaScript -->
+        </div>
+
+        <!-- How to Play -->
+        <div class="how-to-play">
+            <h2>How to Play:</h2>
+            <p>Welcome to Moles Game! Your goal is to click the moles as they pop up. For each successful click, you earn a point. If you miss or click a non-active mole, you lose a life. You have 3 lives, so act fast and aim carefully!</p>
+            <p>Click "Start" to begin the game and "Restart" to reset your progress. Good luck!</p>
+        </div>
+
+        <!-- Game Over Popup -->
+        <div class="game-over-popup" id="gameOverPopup">
+            <h2>Game Over!</h2>
+            <p>Your final score: <span id="finalScore">0</span></p>
+            <button onclick="restartGame()">Restart Game</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Connect with us:</p>
+        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
+        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+        <p><a href="privacypolicy.html">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const gameBoard = document.getElementById("gameBoard");
+        const scoreDisplay = document.getElementById("score");
+        const livesDisplay = document.getElementById("lives");
+        const gameOverPopup = document.getElementById("gameOverPopup");
+        const finalScoreDisplay = document.getElementById("finalScore");
+
+        let score = 0;
+        let lives = 3;
+        let activeMole = null;
+        let gameInterval;
+
+        // Create the game board
+        for (let i = 0; i < 9; i++) {
+            const mole = document.createElement("div");
+            mole.className = "mole";
+            gameBoard.appendChild(mole);
+        }
+
+        function startGame() {
+            score = 0;
+            lives = 3;
+            updateUI();
+            hideGameOverPopup();
+
+            gameInterval = setInterval(() => {
+                if (activeMole) activeMole.classList.remove("active");
+
+                const moleIndex = Math.floor(Math.random() * 9);
+                activeMole = gameBoard.children[moleIndex];
+                activeMole.classList.add("active");
+
+                setTimeout(() => {
+                    if (activeMole) activeMole.classList.remove("active");
+                }, 1000);
+            }, 1200);
+        }
+
+        function restartGame() {
+            clearInterval(gameInterval);
+            startGame();
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            finalScoreDisplay.textContent = score;
+            showGameOverPopup();
+        }
+
+        gameBoard.addEventListener("click", (e) => {
+            if (e.target.classList.contains("mole")) {
+                if (e.target.classList.contains("active")) {
+                    score++;
+                } else {
+                    lives--;
+                }
+                updateUI();
+            }
+        });
+
+        function updateUI() {
+            scoreDisplay.textContent = `Score: ${score}`;
+            livesDisplay.textContent = `Lives: ${lives}`;
+            if (lives <= 0) {
+                endGame();
+            }
+        }
+
+        function showGameOverPopup() {
+            gameOverPopup.style.display = "block";
+        }
+
+        function hideGameOverPopup() {
+            gameOverPopup.style.display = "none";
+        }
+
+        document.getElementById("startButton").addEventListener("click", startGame);
+        document.getElementById("restartButton").addEventListener("click", restartGame);
+    </script>
+</body>
+</html>

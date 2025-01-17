@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Hopper - Levelox Studios</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #FFD700;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            user-select: none; /* Prevent text highlighting */
+        }
+
+        header {
+            background-color: #FFD700;
+            padding: 10px;
+            color: #000;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
+        }
+
+        .nav-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-bar a {
+            color: #000;
+            background-color: #FFD700;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-bar a:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        .game-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #111;
+            border-radius: 10px;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid #FFD700;
+        }
+
+        footer a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        .score {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px #000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Levelox Studios</div>
+        <div class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
+            <a href="webgames.html">WebGames</a>
+            <a href="team.html">Team</a>
+            <a href="about.html">About</a>
+        </div>
+    </header>
+
+    <div class="game-container">
+        <canvas id="skyhopper"></canvas>
+        <div class="score" id="scoreDisplay">Score: 0</div>
+    </div>
+
+    <footer>
+        <p>Connect with us:</p>
+        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
+        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+        <p><a href="privacypolicy.html">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('skyhopper');
+        const ctx = canvas.getContext('2d');
+        const gravity = 0.2;
+        const lift = -7;
+        const obstacleSpeed = 2;
+        const obstacleGap = 250; // Gap between top and bottom obstacles
+        const minObstacleSpacing = 400; // Minimum distance between obstacles
+        const maxObstacleSpacing = 600; // Maximum distance between obstacles
+        let bird, obstacles, score, gameOver, gameStarted;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight - document.querySelector('header').offsetHeight - document.querySelector('footer').offsetHeight;
+
+        class Bird {
+            constructor() {
+                this.x = 50;
+                this.y = canvas.height / 2;
+                this.size = 20;
+                this.velocity = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            update() {
+                if (!gameStarted) return;
+
+                this.velocity += gravity;
+                this.y += this.velocity;
+
+                if (this.y + this.size > canvas.height) {
+                    this.y = canvas.height - this.size;
+                    gameOver = true;
+                }
+
+                if (this.y - this.size < 0) {
+                    this.y = this.size;
+                }
+            }
+
+            jump() {
+                this.velocity = lift;
+            }
+        }
+
+        class Obstacle {
+            constructor() {
+                this.width = 30;
+                this.gapY = Math.random() * (canvas.height - obstacleGap);
+                this.x = canvas.width;
+            }
+
+            draw() {
+                ctx.fillStyle = '#FFD700';
+                // Top obstacle
+                ctx.fillRect(this.x, 0, this.width, this.gapY);
+                // Bottom obstacle
+                ctx.fillRect(this.x, this.gapY + obstacleGap, this.width, canvas.height - (this.gapY + obstacleGap));
+            }
+
+            update() {
+                this.x -= obstacleSpeed;
+
+                if (this.x + this.width < 0) {
+                    score++;
+                    updateScore();
+                    return true;
+                }
+
+                if (
+                    bird.x + bird.size > this.x &&
+                    bird.x - bird.size < this.x + this.width &&
+                    (bird.y - bird.size < this.gapY || bird.y + bird.size > this.gapY + obstacleGap)
+                ) {
+                    gameOver = true;
+                }
+
+                return false;
+            }
+        }
+
+        function resetGame() {
+            bird = new Bird();
+            obstacles = [];
+            score = 0;
+            gameOver = false;
+            gameStarted = false;
+            updateScore();
+        }
+
+        function updateScore() {
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            scoreDisplay.textContent = `Score: ${score}`;
+        }
+
+        function handleInput(e) {
+            if (e.type === 'keydown' && e.code === 'Space' || e.type === 'click' || e.type === 'touchstart') {
+                if (gameOver) {
+                    resetGame();
+                    gameLoop();
+                } else if (!gameStarted) {
+                    gameStarted = true;
+                }
+                bird.jump();
+            }
+        }
+
+        function drawGameOver() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#FFD700';
+            ctx.textAlign = 'center';
+            ctx.font = '30px Arial';
+            ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
+            ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+            ctx.fillText('Press Space or Tap to Restart', canvas.width / 2, canvas.height / 2 + 60);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (gameOver) {
+                drawGameOver();
+                return;
+            }
+
+            bird.update();
+            bird.draw();
+
+            if (gameStarted && (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - Math.random() * (maxObstacleSpacing - minObstacleSpacing) - minObstacleSpacing)) {
+                obstacles.push(new Obstacle());
+            }
+
+            obstacles = obstacles.filter(obstacle => {
+                obstacle.draw();
+                return !obstacle.update();
+            });
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        resetGame();
+        gameLoop();
+
+        window.addEventListener('keydown', handleInput);
+        canvas.addEventListener('click', handleInput);
+        canvas.addEventListener('touchstart', handleInput);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - document.querySelector('header').offsetHeight - document.querySelector('footer').offsetHeight;
+            resetGame();
+        });
+    </script>
+</body>
+</html>

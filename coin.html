@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Clicker - Levelox Studios</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #FFD700;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #FFD700;
+            padding: 10px;
+            color: #000;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
+        }
+
+        .nav-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-bar a {
+            color: #000;
+            background-color: #FFD700;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-bar a:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        .content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .coin {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            background-color: #FFD700;
+            border: 4px solid #000;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            color: #000;
+            font-weight: bold;
+            user-select: none;
+            transition: transform 0.1s ease;
+        }
+
+        .coin:active {
+            transform: scale(0.95);
+        }
+
+        #money {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        .actions {
+            margin-top: 20px;
+        }
+
+        .actions button {
+            margin: 10px;
+            padding: 10px 20px;
+            color: #FFD700;
+            background-color: #000;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .actions button:hover {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        /* Level System Styles */
+        .level-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .level-bar {
+            width: 80%;
+            height: 20px;
+            margin: 0 auto;
+            background-color: #222;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .level-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #FFD700, #FF4500);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .level-label {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-container {
+            background-color: #222;
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            width: 500px;
+            max-height: 80%;
+            overflow-y: auto;
+            color: #FFD700;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: #fff;
+            border: none;
+            font-size: 1.2em;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Store Styles */
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .store-item {
+            background-color: #111;
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            color: #FFD700;
+            transition: transform 0.2s ease;
+        }
+
+        .store-item:hover {
+            transform: scale(1.05);
+        }
+
+        .store-item .color-circle {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px auto;
+            border-radius: 50%;
+            border: 2px solid #FFD700;
+        }
+
+        .store-item button {
+            font-size: 1em;
+            color: #000;
+            background-color: #FFD700;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .store-item button:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Pop-up Styles */
+        .pop-message {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+            z-index: 1100;
+            display: none;
+        }
+
+        .pop-message.green {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .pop-message.red {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid #FFD700;
+            font-size: 1em;
+        }
+
+        footer a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Levelox Studios</div>
+        <div class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
+            <a href="webgames.html">WebGames</a>
+            <a href="team.html">Team</a>
+            <a href="about.html">About</a>
+        </div>
+    </header>
+
+    <div class="content">
+        <h1>Coin Clicker</h1>
+        <div id="coin" class="coin"></div>
+        <p id="money">Money: $0</p>
+
+        <div class="actions">
+            <button id="upgradeButton">Upgrade Coin (+$1) - Cost: $10</button>
+            <button id="storeButton">Store</button>
+            <button id="inventoryButton">Inventory</button>
+        </div>
+
+        <!-- Level System -->
+        <div class="level-container">
+            <div class="level-bar">
+                <div class="level-fill" id="levelFill"></div>
+            </div>
+            <p class="level-label">Level: <span id="levelLabel">1</span> (<span id="levelPercentage">0%</span>)</p>
+        </div>
+    </div>
+
+    <!-- Store Overlay -->
+    <div id="storeOverlay" class="overlay">
+        <div class="overlay-container">
+            <button class="close-overlay" id="closeStore">&times;</button>
+            <h2>Store</h2>
+            <div id="storeItems" class="store-grid"></div>
+        </div>
+    </div>
+
+    <!-- Inventory Overlay -->
+    <div id="inventoryOverlay" class="overlay">
+        <div class="overlay-container">
+            <button class="close-overlay" id="closeInventory">&times;</button>
+            <h2>Inventory</h2>
+            <div id="inventoryItems" class="store-grid"></div>
+        </div>
+    </div>
+
+    <!-- Pop-up Messages -->
+    <div id="popMessage" class="pop-message"></div>
+
+    <footer>
+        <p>Connect with us:</p>
+        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
+        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+        <p><a href="privacypolicy.html" target="_blank">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let money = 0;
+        let upgradeAmount = 1;
+        let upgradeCost = 10;
+        let level = 1;
+        let experience = 0;
+        const levelCap = [100, 250, 500, 1000];
+        const ownedDecorations = { yellow: true };
+        let equippedColor = "yellow";
+
+        const coin = document.getElementById("coin");
+        const moneyDisplay = document.getElementById("money");
+        const upgradeButton = document.getElementById("upgradeButton");
+        const levelFill = document.getElementById("levelFill");
+        const levelLabel = document.getElementById("levelLabel");
+        const levelPercentage = document.getElementById("levelPercentage");
+        const storeButton = document.getElementById("storeButton");
+        const inventoryButton = document.getElementById("inventoryButton");
+        const storeOverlay = document.getElementById("storeOverlay");
+        const inventoryOverlay = document.getElementById("inventoryOverlay");
+        const closeStore = document.getElementById("closeStore");
+        const closeInventory = document.getElementById("closeInventory");
+        const storeItems = document.getElementById("storeItems");
+        const inventoryItems = document.getElementById("inventoryItems");
+        const popMessage = document.getElementById("popMessage");
+
+        function updateMoneyDisplay() {
+            moneyDisplay.textContent = `Money: $${money.toLocaleString()}`;
+        }
+
+        function updateLevelBar() {
+            const currentCap = levelCap[level - 1] || (level * 1000);
+            const percentage = Math.min((experience / currentCap) * 100, 100);
+            levelFill.style.width = `${percentage}%`;
+            levelPercentage.textContent = `${Math.floor(percentage)}%`;
+
+            if (experience >= currentCap) {
+                levelUp();
+            }
+        }
+
+        function levelUp() {
+            experience -= levelCap[level - 1] || (level * 1000);
+            level++;
+            levelLabel.textContent = level;
+            updateLevelBar();
+            showPopMessage("green", `Level Up! You are now Level ${level}!`);
+        }
+
+        function showPopMessage(type, message) {
+            popMessage.className = `pop-message ${type}`;
+            popMessage.textContent = message;
+            popMessage.style.display = "block";
+            setTimeout(() => {
+                popMessage.style.display = "none";
+            }, 2000);
+        }
+
+        function populateStore() {
+            storeItems.innerHTML = "";
+            const colors = [
+                { color: "red", cost: 15 },
+                { color: "green", cost: 30 },
+                { color: "blue", cost: 50 },
+                { color: "rainbow", cost: 100 },
+                { color: "diamond", cost: 200 },
+                { color: "zebra", cost: 250 },
+            ];
+
+            colors.forEach(({ color, cost }) => {
+                const item = document.createElement("div");
+                item.className = "store-item";
+
+                const colorCircle = document.createElement("div");
+                colorCircle.className = "color-circle";
+                if (color === "rainbow") {
+                    colorCircle.style.background = "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)";
+                } else if (color === "zebra") {
+                    colorCircle.style.background = "repeating-linear-gradient(45deg, white, white 10px, black 10px, black 20px)";
+                } else if (color === "diamond") {
+                    colorCircle.style.background = "radial-gradient(circle, white, lightblue)";
+                } else {
+                    colorCircle.style.backgroundColor = color;
+                }
+
+                const buyButton = document.createElement("button");
+                buyButton.textContent = ownedDecorations[color] ? "Owned" : `Buy ($${cost})`;
+                buyButton.disabled = !!ownedDecorations[color];
+
+                buyButton.addEventListener("click", () => {
+                    if (money >= cost && !ownedDecorations[color]) {
+                        money -= cost;
+                        ownedDecorations[color] = true;
+                        updateMoneyDisplay();
+                        populateStore();
+                        showPopMessage("green", `Purchased ${color}!`);
+                    } else {
+                        showPopMessage("red", "Not Enough Coins!");
+                    }
+                });
+
+                item.appendChild(colorCircle);
+                item.appendChild(buyButton);
+                storeItems.appendChild(item);
+            });
+        }
+
+        function populateInventory() {
+            inventoryItems.innerHTML = ""; // Clear previous inventory items
+            Object.keys(ownedDecorations).forEach((color) => {
+                const item = document.createElement("div");
+                item.className = "store-item";
+
+                const colorCircle = document.createElement("div");
+                colorCircle.className = "color-circle";
+                if (color === "rainbow") {
+                    colorCircle.style.background = "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)";
+                } else if (color === "zebra") {
+                    colorCircle.style.background = "repeating-linear-gradient(45deg, white, white 10px, black 10px, black 20px)";
+                } else if (color === "diamond") {
+                    colorCircle.style.background = "radial-gradient(circle, white, lightblue)";
+                } else {
+                    colorCircle.style.backgroundColor = color;
+                }
+
+                const equipButton = document.createElement("button");
+                equipButton.textContent = equippedColor === color ? "Equipped" : "Equip";
+                equipButton.disabled = equippedColor === color;
+
+                equipButton.addEventListener("click", () => {
+                    equippedColor = color;
+                    updateCoinAppearance(color);
+                    populateInventory();
+                });
+
+                item.appendChild(colorCircle);
+                item.appendChild(equipButton);
+                inventoryItems.appendChild(item);
+            });
+        }
+
+        function updateCoinAppearance(color) {
+            // Reset all custom styles before applying the new one
+            coin.style.background = "";
+            coin.style.backgroundColor = "";
+
+            if (color === "rainbow") {
+                coin.style.background = "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)";
+            } else if (color === "zebra") {
+                coin.style.background = "repeating-linear-gradient(45deg, white, white 10px, black 10px, black 20px)";
+            } else if (color === "diamond") {
+                coin.style.background = "radial-gradient(circle, white, lightblue)";
+            } else {
+                coin.style.backgroundColor = color; // Set a solid color
+            }
+        }
+
+        coin.addEventListener("click", () => {
+            money += upgradeAmount;
+            experience += upgradeAmount;
+            updateMoneyDisplay();
+            updateLevelBar();
+        });
+
+        upgradeButton.addEventListener("click", () => {
+            if (money >= upgradeCost) {
+                money -= upgradeCost;
+                upgradeAmount++;
+                upgradeCost += 10;
+                upgradeButton.textContent = `Upgrade Coin (+$${upgradeAmount}) - Cost: $${upgradeCost}`;
+                updateMoneyDisplay();
+            } else {
+                showPopMessage("red", "Not Enough Coins!");
+            }
+        });
+
+        storeButton.addEventListener("click", () => {
+            storeOverlay.style.display = "flex";
+            populateStore();
+        });
+
+        closeStore.addEventListener("click", () => {
+            storeOverlay.style.display = "none";
+        });
+
+        inventoryButton.addEventListener("click", () => {
+            inventoryOverlay.style.display = "flex";
+            populateInventory();
+        });
+
+        closeInventory.addEventListener("click", () => {
+            inventoryOverlay.style.display = "none";
+        });
+
+        updateMoneyDisplay();
+        updateLevelBar();
+    </script>
+</body>
+</html>

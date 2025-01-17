@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Hopper - Levelox Studios</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #FFD700;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #FFD700;
+            padding: 10px;
+            color: #000;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
+        }
+
+        .nav-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-bar a {
+            color: #000;
+            background-color: #FFD700;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-bar a:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        .content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .game-card {
+            background-color: #111;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 20px #FFD700;
+        }
+
+        .game-title {
+            font-size: 1.5em;
+            margin: 15px 0;
+            color: #FFD700;
+        }
+
+        .play-button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #000;
+            background-color: #FFD700;
+            border: 2px solid #000;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid #FFD700;
+        }
+
+        footer a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Levelox Studios</div>
+        <div class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
+            <a href="webgames.html">WebGames</a>
+            <a href="team.html">Team</a>
+            <a href="about.html">About</a>
+        </div>
+    </header>
+
+    <div class="content">
+        <h1>Levelox Studios WebGames</h1>
+        <div class="games-grid">
+            <!-- Moles Game -->
+            <div class="game-card">
+                <h2 class="game-title">Moles Game</h2>
+                <p>Test your reflexes in this exciting and fast-paced whack-a-mole game!</p>
+                <button class="play-button" onclick="location.href='moles.html'">Play Now</button>
+            </div>
+
+            <!-- Coin Clicker -->
+            <div class="game-card">
+                <h2 class="game-title">Coin Clicker</h2>
+                <p>Click your way to riches in this fun and addicting coin clicker game!</p>
+                <button class="play-button" onclick="location.href='coin.html'">Play Now</button>
+            </div>
+
+            <!-- Sky Hopper -->
+            <div class="game-card">
+                <h2 class="game-title">Sky Hopper</h2>
+                <p>Guide your character through a series of obstacles in this fast-paced and challenging game!</p>
+                <button class="play-button" onclick="location.href='skyhopper.html'">Play Now</button>
+            </div>
+
+            <!-- Placeholder for Future Games -->
+            <div class="game-card">
+                <h2 class="game-title">Coming Soon</h2>
+                <p>Stay tuned for our upcoming web games!</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Connect with us:</p>
+        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
+        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+        <p><a href="privacypolicy.html">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+    </footer>
+</body>
+</html>
