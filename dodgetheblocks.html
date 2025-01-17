@@ -19,38 +19,129 @@
         }
 
         header {
-            background-color: #FFD700;
-            padding: 10px;
-            color: #000;
-            font-size: 1.5em;
-            font-weight: bold;
+            background-color: #000;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid #000;
-            z-index: 1000;
+            border-bottom: 4px solid #FFD700;
             position: sticky;
             top: 0;
+            z-index: 1000;
         }
 
-        .nav-bar {
+        header .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        header .nav-bar {
             display: flex;
-            gap: 10px;
+            gap: 20px;
         }
 
-        .nav-bar a {
-            color: #000;
-            background-color: #FFD700;
-            padding: 5px 15px;
-            border-radius: 5px;
+        header .nav-bar a {
+            color: #FFD700;
             text-decoration: none;
             font-weight: bold;
-            transition: 0.3s;
+            padding: 8px 15px;
+            position: relative;
+            transition: color 0.3s ease;
         }
 
-        .nav-bar a:hover {
-            background-color: #000;
+        header .nav-bar a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #FFD700;
+            transition: all 0.3s ease;
+        }
+
+        header .nav-bar a:hover::after {
+            left: 0;
+            width: 100%;
+        }
+
+        .career-button {
+            background-color: #FFD700;
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .career-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            background-color: white;
+        }
+
+        footer {
+            background-color: #222;
             color: #FFD700;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #FFD700;
+            position: sticky;
+            bottom: 0;
+        }
+
+        footer .footer-social a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 1.2em;
+            display: block;
+            text-align: left;
+        }
+
+        footer .footer-social a:hover {
+            color: white;
+        }
+
+        .footer-logo {
+            max-width: 100px;
+        }
+
+        .game-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #111;
+            border-radius: 10px;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid #FFD700;
+        }
+
+        footer a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        footer a:hover {
+            color: #fff;
         }
 
         .game-container {
@@ -186,14 +277,15 @@
 </head>
 <body>
     <header>
-        <div>Levelox Studios</div>
-        <div class="nav-bar">
+        <div class="logo">Levelox Studios</div>
+        <nav class="nav-bar">
             <a href="index.html">Home</a>
-            <a href="https://buymeacoffee.com/leveloxstudios" target="_blank">Support</a>
+            <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
             <a href="webgames.html">WebGames</a>
             <a href="team.html">Team</a>
             <a href="about.html">About</a>
-        </div>
+        </nav>
+        <button class="career-button" onclick="window.location.href='team.html'">Careers →</button>
     </header>
 
     <div class="game-container">
@@ -223,14 +315,16 @@
     </div>
 
     <footer>
-        <p>Connect with us:</p>
-        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
-        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
-        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
-        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
-        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
-        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
-        <p><a href="privacypolicy.html">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+        <div class="footer-social">
+            <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+            <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+            <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+            <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+            <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+            <a href="privacypolicy.html" target="_blank">Privacy Policy</a>
+        </div>
+        <p>© 2024 Levelox Studios. All rights reserved.</p>
+        <img src="Favicon.png" alt="Levelox Logo" class="footer-logo">
     </footer>
 
     <script>

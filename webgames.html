@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGames - Levelox Studios</title>
-    <link rel="icon" href="favicon.png" type="image/png">
     <style>
         /* General Styles */
         body {
@@ -12,174 +11,215 @@
             font-family: Arial, sans-serif;
             background-color: #000;
             color: #FFD700;
-            text-align: center;
+            scroll-behavior: smooth;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            user-select: none; /* Prevent text highlighting */
         }
 
         header {
-            background-color: #FFD700;
-            padding: 10px;
-            color: #000;
-            font-size: 1.5em;
-            font-weight: bold;
+            background-color: #000;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid #000;
+            border-bottom: 4px solid #FFD700;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .nav-bar {
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-bar a {
-            color: #000;
-            background-color: #FFD700;
-            padding: 5px 15px;
-            border-radius: 5px;
-            text-decoration: none;
+        header .logo {
+            font-size: 1.8em;
             font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .nav-bar a:hover {
-            background-color: #000;
             color: #FFD700;
         }
 
-        .content {
-            padding: 20px;
+        header .nav-bar {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav-bar a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        header .nav-bar a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #FFD700;
+            transition: all 0.3s ease;
+        }
+
+        header .nav-bar a:hover::after {
+            left: 0;
+            width: 100%;
+        }
+
+        .career-button {
+            background-color: #FFD700;
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .career-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            background-color: white;
+        }
+
+        .games-section {
+            padding: 50px 20px;
+            text-align: center;
             flex: 1;
         }
 
-        h1 {
-            font-size: 2em;
+        .games-section h1 {
             margin-bottom: 20px;
         }
 
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            justify-content: center;
-            align-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .game-card {
-            background-color: #111;
+            background-color: #222;
             border: 2px solid #FFD700;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 15px;
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: fade-in 1s ease-in-out;
         }
 
-        .game-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 0px 20px #FFD700;
-        }
-
-        .game-title {
+        .game-card h3 {
             font-size: 1.5em;
-            margin: 15px 0;
-            color: #FFD700;
+            margin-bottom: 10px;
         }
 
         .play-button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #000;
             background-color: #FFD700;
-            border: 2px solid #000;
-            border-radius: 10px;
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 1em;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
         .play-button:hover {
-            background-color: #000;
-            color: #FFD700;
+            transform: scale(1.1);
+            background-color: white;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         footer {
             background-color: #222;
             color: #FFD700;
-            text-align: center;
-            padding: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-top: 2px solid #FFD700;
+            position: sticky;
+            bottom: 0;
         }
 
-        footer a {
+        footer .footer-social a {
             color: #FFD700;
-            margin: 0 10px;
             text-decoration: none;
             font-size: 1.2em;
+            display: block;
         }
 
-        footer a:hover {
-            color: #fff;
+        footer .footer-social a:hover {
+            color: white;
+        }
+
+        .footer-logo {
+            max-width: 100px;
         }
     </style>
 </head>
 <body>
     <header>
-        <div>Levelox Studios</div>
-        <div class="nav-bar">
+        <div class="logo">Levelox Studios</div>
+        <nav class="nav-bar">
             <a href="index.html">Home</a>
             <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
             <a href="webgames.html">WebGames</a>
             <a href="team.html">Team</a>
             <a href="about.html">About</a>
-        </div>
+        </nav>
+        <button class="career-button" onclick="window.location.href='team.html'">Careers →</button>
     </header>
 
-    <div class="content">
+    <div class="games-section">
         <h1>Our WebGames</h1>
         <div class="games-grid">
-            <!-- Moles Game -->
             <div class="game-card">
-                <h2 class="game-title">Moles Game</h2>
-                <p>Test your reflexes in this exciting and fast-paced whack-a-mole game!</p>
-                <button class="play-button" onclick="location.href='moles.html'">Play Now</button>
+                <h3>Moles Game</h3>
+                <button class="play-button" onclick="window.location.href='moles.html'">Play Now</button>
             </div>
-
-            <!-- Coin Clicker -->
             <div class="game-card">
-                <h2 class="game-title">Coin Clicker</h2>
-                <p>Click your way to riches in this fun and addicting coin clicker game!</p>
-                <button class="play-button" onclick="location.href='coin.html'">Play Now</button>
+                <h3>Coin Clicker</h3>
+                <button class="play-button" onclick="window.location.href='coin.html'">Play Now</button>
             </div>
-
-            <!-- Sky Hopper -->
             <div class="game-card">
-                <h2 class="game-title">Sky Hopper</h2>
-                <p>Guide your character through a series of obstacles in this fast-paced and challenging game!</p>
-                <button class="play-button" onclick="location.href='skyhopper.html'">Play Now</button>
+                <h3>SkyHopper</h3>
+                <button class="play-button" onclick="window.location.href='skyhopper.html'">Play Now</button>
             </div>
-
-            <!-- Dodge the Blocks -->
             <div class="game-card">
-                <h2 class="game-title">Dodge the Blocks</h2>
-                <p>Survive as long as possible by dodging falling blocks. How long can you last?</p>
-                <button class="play-button" onclick="location.href='dodgetheblocks.html'">Play Now</button>
+                <h3>Dodge the Blocks</h3>
+                <button class="play-button" onclick="window.location.href='dodgetheblocks.html'">Play Now</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>Connect with us:</p>
-        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
-        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
-        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
-        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
-        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
-        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
-        <p><a href="privacypolicy.html">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+        <div class="footer-social">
+            <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+            <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+            <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+            <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+            <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+            <a href="privacypolicy.html" target="_blank">Privacy Policy</a>
+        </div>
+        <p>© 2024 Levelox Studios. All rights reserved.</p>
+        <img src="Favicon.png" alt="Levelox Logo" class="footer-logo">
     </footer>
 </body>
 </html>
