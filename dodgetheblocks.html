@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodge the Blocks - Levelox Studios</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #FFD700;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none; /* Prevent text highlighting */
+        }
+
+        header {
+            background-color: #FFD700;
+            padding: 10px;
+            color: #000;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
+            z-index: 1000;
+            position: sticky;
+            top: 0;
+        }
+
+        .nav-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-bar a {
+            color: #000;
+            background-color: #FFD700;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-bar a:hover {
+            background-color: #000;
+            color: #FFD700;
+        }
+
+        .game-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #111;
+        }
+
+        .score, .timer {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px #000;
+        }
+
+        .score {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .timer {
+            top: 10px;
+            right: 50px;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            text-align: center;
+            padding: 10px;
+            border-top: 2px solid #FFD700;
+        }
+
+        footer a {
+            color: #FFD700;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        .instructions-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #222;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #FFD700;
+    text-align: center;
+    color: #FFD700;
+    width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.start-button,
+.how-to-play-button,
+.return-button {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #000;
+    background-color: #FFD700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.start-button:hover,
+.how-to-play-button:hover,
+.return-button:hover {
+    background-color: #fff;
+}
+
+.how-to-play-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 400px;
+    background-color: #111;
+    border: 2px solid #FFD700;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.how-to-play-popup.active {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-content {
+    color: #FFD700;
+    text-align: center;
+}
+
+.close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    font-size: 1.5em;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.close-popup:hover {
+    background-color: #ff4d4d;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div>Levelox Studios</div>
+        <div class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="https://buymeacoffee.com/leveloxstudios" target="_blank">Support</a>
+            <a href="webgames.html">WebGames</a>
+            <a href="team.html">Team</a>
+            <a href="about.html">About</a>
+        </div>
+    </header>
+
+    <div class="game-container">
+        <canvas id="dodgeCanvas"></canvas>
+        <div class="score" id="scoreDisplay">Score: 0</div>
+        <div class="timer" id="timerDisplay">Time: 0s</div>
+        <!-- Start Box -->
+<div class="instructions-container" id="instructions">
+    <button class="start-button" id="startButton">Start Game</button>
+    <button class="how-to-play-button" id="howToPlayButton">How to Play</button>
+    <button class="return-button" onclick="window.location.href='webgames.html'">Return to WebGames</button>
+</div>
+
+<!-- How to Play Pop-Up -->
+<div class="how-to-play-popup" id="howToPlayPopup">
+    <div class="popup-content">
+        <button class="close-popup" id="closePopup">&times;</button>
+        <h2>How to Play</h2>
+        <p><strong>Objective:</strong> Dodge the falling red blocks to survive as long as possible!</p>
+        <p><strong>Controls:</strong></p>
+        <ul>
+            <li><strong>Arrow Keys:</strong> Move left and right</li>
+            <li><strong>Tap/Swipe:</strong> Move on mobile devices</li>
+        </ul>
+    </div>
+</div>
+    </div>
+
+    <footer>
+        <p>Connect with us:</p>
+        <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+        <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+        <a href="https://www.threads.net/@leveloxstudios" target="_blank">Threads</a>
+        <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+        <p><a href="privacypolicy.html">Privacy Policy</a> | © 2024 Levelox Studios. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById("dodgeCanvas");
+        const ctx = canvas.getContext("2d");
+        const howToPlayButton = document.getElementById("howToPlayButton");
+        const howToPlayPopup = document.getElementById("howToPlayPopup");
+        const closePopup = document.getElementById("closePopup");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight - document.querySelector("header").offsetHeight - document.querySelector("footer").offsetHeight;
+
+        const player = {
+            x: canvas.width / 2 - 20,
+            y: canvas.height - 60,
+            width: 40,
+            height: 40,
+            color: "#000",
+            outline: "#FFD700",
+            speed: 6,
+            dx: 0,
+        };
+
+        const blocks = [];
+        const blockSize = 40;
+        let blockSpeed = 3;
+        let blockSpawnRate = 120; // Frames between block spawns
+        let score = 0;
+        let frameCount = 0;
+        let startTime = null;
+        let gameOver = false;
+
+        const scoreDisplay = document.getElementById("scoreDisplay");
+        const timerDisplay = document.getElementById("timerDisplay");
+        const instructions = document.getElementById("instructions");
+        const startButton = document.getElementById("startButton");
+
+        function updateScoreDisplay() {
+    const scoreElement = document.getElementById("scoreDisplay");
+    scoreElement.textContent = `Score: ${score}`; // No 2x multiplier logic
+}
+
+        function updateTimerDisplay() {
+            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            timerDisplay.textContent = `Time: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+
+        function spawnBlock() {
+    const x = Math.random() * (canvas.width - blockSize);
+
+    blocks.push({
+        x,
+        y: -blockSize,
+        width: blockSize,
+        height: blockSize,
+        color: "red", // All blocks are red
+    });
+}
+
+        function moveBlocks() {
+    blocks.forEach((block) => {
+        block.y += blockSpeed;
+    });
+
+    // Remove blocks that leave the screen and increase score
+    while (blocks.length > 0 && blocks[0].y > canvas.height) {
+        blocks.shift();
+        if (!gameOver) {
+            score++; // Increment score for successfully dodging a block
+            updateScoreDisplay();
+        }
+    }
+}
+
+        function drawBlocks() {
+            blocks.forEach((block) => {
+                ctx.beginPath();
+                ctx.arc(block.x + block.width / 2, block.y + block.height / 2, block.width / 2, 0, Math.PI * 2);
+                ctx.fillStyle = block.color;
+                ctx.fill();
+                ctx.closePath();
+            });
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.strokeStyle = player.outline;
+            ctx.lineWidth = 4;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.strokeRect(player.x, player.y, player.width, player.height);
+        }
+
+        function checkCollisions() {
+    blocks.forEach((block, index) => {
+        const blockCenterX = block.x + block.width / 2;
+        const blockCenterY = block.y + block.height / 2;
+        const playerCenterX = player.x + player.width / 2;
+        const playerCenterY = player.y + player.height / 2;
+
+        const dx = blockCenterX - playerCenterX;
+        const dy = blockCenterY - playerCenterY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < block.width / 2 + player.width / 2) {
+            gameOver = true; // End game on collision
+        }
+    });
+}
+
+        function movePlayer() {
+            player.x += player.dx;
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+        }
+
+        function resetGame() {
+            player.x = canvas.width / 2 - player.width / 2;
+            blocks.length = 0;
+            score = 0;
+            gameOver = false;
+            powerUpActive = false;
+            updateScoreDisplay();
+        }
+
+        function startGame() {
+            resetGame();
+            instructions.style.display = "none";
+            startTime = Date.now();
+            gameLoop();
+        }
+
+        function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (gameOver) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#FFD700";
+        ctx.textAlign = "center";
+        ctx.font = "30px Arial";
+        ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 40);
+        ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2);
+        ctx.fillText("Press Space or Tap to Restart", canvas.width / 2, canvas.height / 2 + 40);
+        return;
+    }
+
+    movePlayer();
+    moveBlocks();
+    checkCollisions();
+
+    // Gradually increase difficulty
+    if (frameCount % (30 * 60) === 0) { // Every 30 seconds
+        blockSpeed += 0.5; // Increase block speed
+        if (blockSpawnRate > 30) blockSpawnRate -= 10; // Reduce spawn rate to make blocks more frequent
+    }
+
+    if (frameCount % blockSpawnRate === 0) spawnBlock(); // Spawn blocks at intervals
+    frameCount++;
+
+    drawPlayer();
+    drawBlocks();
+    updateTimerDisplay();
+
+    requestAnimationFrame(gameLoop);
+}
+
+
+        startButton.addEventListener("click", startGame);
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") player.dx = -player.speed;
+            if (e.key === "ArrowRight") player.dx = player.speed;
+            if (e.key === " " && gameOver) startGame();
+        });
+
+        window.addEventListener("keyup", (e) => {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") player.dx = 0;
+        });
+
+        canvas.addEventListener("click", () => {
+            if (gameOver) startGame();
+        });
+
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - document.querySelector("header").offsetHeight - document.querySelector("footer").offsetHeight;
+            resetGame();
+        });
+        let animationTimeout; // Timeout for animations
+
+    function updateScoreDisplay() {
+        const scoreElement = document.getElementById("scoreDisplay");
+        scoreElement.textContent = `Score: ${score}${powerUpActive ? ` x2 (${Math.ceil(powerUpRemaining / 60)})` : ""}`;
+        triggerAnimation(scoreElement); // Add animation on score update
+    }
+
+    function updateTimerDisplay() {
+        const timerElement = document.getElementById("timerDisplay");
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsedTime / 60);
+        const seconds = elapsedTime % 60;
+        timerElement.textContent = `Time: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        triggerAnimation(timerElement); // Add animation on timer update
+    }
+
+    function triggerAnimation(element) {
+        clearTimeout(animationTimeout);
+        element.style.transform = "scale(1.3)"; // Scale up
+        element.style.transition = "transform 0.2s ease";
+        animationTimeout = setTimeout(() => {
+            element.style.transform = "scale(1)"; // Scale back to normal
+        }, 200);
+    }
+
+    function activateMultiplierAnimation() {
+        const scoreElement = document.getElementById("scoreDisplay");
+        scoreElement.style.color = "gold"; // Highlight the score
+        scoreElement.style.fontWeight = "bold";
+        scoreElement.style.transition = "color 0.5s ease, font-weight 0.5s ease";
+
+        setTimeout(() => {
+            if (!powerUpActive) {
+                scoreElement.style.color = "#FFD700"; // Revert to original color
+                scoreElement.style.fontWeight = "normal";
+            }
+        }, 30000); // Sync with x2 multiplier duration
+    }
+     // Show "How to Play" pop-up
+     howToPlayButton.addEventListener("click", () => {
+            howToPlayPopup.classList.add("active");
+        });
+
+        // Close "How to Play" pop-up
+        closePopup.addEventListener("click", () => {
+            howToPlayPopup.classList.remove("active");
+        });
+        
+    </script>
+</body>
+</html>
