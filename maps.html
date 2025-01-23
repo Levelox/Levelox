@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="Favicon" sizes="32x32" href="Favicon.png">
+    <link rel="Favicon" href="Favicon.png">
+    <title>Maps - Levelox Studios</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #FFD700;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #000;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #FFD700;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        header .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        header .nav-bar {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav-bar a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        header .nav-bar a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #FFD700;
+            transition: all 0.3s ease;
+        }
+
+        header .nav-bar a:hover::after {
+            left: 0;
+            width: 100%;
+        }
+
+        .career-button {
+            background-color: #FFD700;
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .career-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            background-color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .game-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .game-item {
+            display: flex;
+            align-items: flex-start;
+            background-color: #111;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            text-align: left;
+        }
+
+        .game-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .description-box:hover {
+            transform: scale(1.05);
+        }
+
+        .game-item img {
+            width: 500px;
+            height: 320px;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        .game-item div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-top: 1%;
+            margin-bottom: 1%;
+        }
+
+        .description-box {
+            background-color: #222;
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid #FFD700;
+            margin-bottom: 10px;
+            margin-right: 900px;
+            text-align: left;
+        }
+
+        .game-item h3 {
+            margin: 10px 0;
+            color: #FFD700;
+        }
+
+        .game-item p {
+            font-size: 0.9em;
+            color: #ccc;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .game-item .action-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .game-item .code-box {
+            background-color: #FFD700;
+            color: #000;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .game-item a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin-top: 2%;
+        }
+
+        .game-item a:hover {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        footer {
+            background-color: #222;
+            color: #FFD700;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #FFD700;
+        }
+
+        footer .footer-social a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 1.2em;
+            display: block;
+            text-align: left;
+        }
+
+        footer .footer-social a:hover {
+            color: white;
+        }
+
+        .footer-logo {
+            max-width: 100px;
+            border-radius: 10%;
+        }
+    </style>
+    <script>
+        function copyCode(codeBox) {
+            const originalText = codeBox.textContent;
+            navigator.clipboard.writeText(originalText).then(() => {
+                codeBox.textContent = "COPIED CODE";
+                setTimeout(() => {
+                    codeBox.textContent = originalText;
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy code', err);
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">Levelox Studios</div>
+        <nav class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="https://buymeacoffee.com/leveloxstudios">Support</a>
+            <a href="maps.html">Maps</a>
+            <a href="webgames.html">WebGames</a>
+            <a href="team.html">Team</a>
+            <a href="about.html">About</a>
+        </nav>
+        <button class="career-button" onclick="window.location.href='team.html'">Careers →</button>
+    </header>
+
+    <div class="content">
+        <h1>Our Maps</h1>
+        <p>Explore the maps we’ve designed for Fortnite and Roblox.</p>
+
+        <div class="game-list">
+            <div class="game-item">
+                <div>
+                    <div class="description-box">
+                        <h3>5V5 FPS Red vs Blue</h3>
+                        <p>Experience the ultimate 5V5 First Person Red vs Blue action! Choose from 6 unique loadouts, dive into zero-build gameplay, and have the most fun possible with every match. Earn 10 Gold per elimination and explore the in-game shop for exciting upgrades. Don't forget to follow us on social media for secret codes and unlockable content. With eliminations saving progress and more updates on the way, there's always something new to discover!</p>
+                    </div>
+                    <div class="action-container">
+                        <span class="code-box" onclick="copyCode(this)">3918-2044-8837</span>
+                        <a href="https://www.fortnite.com/@leveloxstudios/3918-2044-8837?lang=en-US">Play Now</a>
+                    </div>
+                </div>
+                <img src="https://cdn-0001.qstv.on.epicgames.com/ZZFoQAmHArabfveSGI/image/landscape_comp.jpeg" alt="Fortnite: Escape Maze">
+            </div>
+
+            <div class="game-item">
+                <div>
+                    <div class="description-box">
+                        <h3>Downhill Drive</h3>
+                        <p>Get ready for the ultimate driving challenge! Navigate your way down a treacherous hill, weaving through diverse biomes while avoiding relentless sentries trying to take you out. Whether you’re aiming for a flawless run or just enjoying the scenic chaos, the goal is simple: make it to the end without getting eliminated. Play solo or with up to 6 friends in this adrenaline-pumping 7-player map crafted in UEFN. How far can you go?</p>
+                    </div>
+                    <div class="action-container">
+                        <span class="code-box" onclick="copyCode(this)">0279-6907-0596</span>
+                        <a href="https://www.fortnite.com/@leveloxstudios/0279-6907-0596?lang=en-US">Play Now</a>
+                    </div>
+                </div>
+                <img src="https://cdn-0001.qstv.on.epicgames.com/pTMQkIASufRcXQzNyI/image/landscape_comp.jpeg" alt="Fortnite: Escape Maze">
+            </div>
+
+            <div class="game-item">
+                <div>
+                    <div class="description-box">
+                        <h3>Levelox Build Fights (1V1)</h3>
+                        <p>Take on your friends in exciting 1V1 matches, where you can test your skills and compete for victory. Whether you're looking to practice and refine your techniques or simply warm up before a big game or tournament, this is the perfect opportunity to sharpen your abilities and get in the zone. It's time to push yourself, improve, and show off your progress!</p>
+                    </div>
+                    <div class="action-container">
+                        <span class="code-box" onclick="copyCode(this)">2503-6215-2706</span>
+                        <a href="https://www.fortnite.com/@leveloxstudios/2503-6215-2706?lang=en-US">Play Now</a>
+                    </div>
+                </div>
+                <img src="https://cdn-0001.qstv.on.epicgames.com/OGNyBJkNBTdZMGVfiM/image/landscape_comp.jpeg" alt="Roblox: Tycoon World">
+            </div>
+
+            <div class="game-item">
+                <div>
+                    <div class="description-box">
+                        <h3>Elemental Blue vs Orange</h3>
+                        <p>Gear up for action with All Weapons at your disposal, each offering unique combat strategies. Unleash your Fun Elemental Powers to turn the tide of battle, and experience the thrilling Best Blue vs Orange showdown. Chapter 6 introduces a brand new set of weapons, adding even more excitement to the fight. Earn 10 Coins Per Elimination and use them to unlock exclusive features in the Ultimate Vault. Plus, your progress is saved, so every Elimination counts!</p>
+                    </div>
+                    <div class="action-container">
+                        <span class="code-box" onclick="copyCode(this)">2190-4719-8903</span>
+                        <a href="https://www.fortnite.com/@leveloxstudios/2190-4719-8903?lang=en-US">Play Now</a>
+                    </div>
+                </div>
+                <img src="https://cdn-0001.qstv.on.epicgames.com/ooewgaQJFGIxKPCnfS/image/landscape_comp.jpeg" alt="Roblox: Obby Adventure">
+            </div>
+
+            <div class="game-item">
+                <div>
+                    <div class="description-box">
+                        <h3>Warehouse Battlegrounds FFA</h3>
+                        <p>Warehouse Battleground is a 6-player Free-for-All where you start by gearing up, then dive into the intense warehouse brawl! With no final standing rule, the action keeps going as long as players are in the game. Explore hidden secrets, improve your skills, and enjoy endless Zero Build combat in this fast-paced battleground!</p>
+                    </div>
+                    <div class="action-container">
+                        <span class="code-box" onclick="copyCode(this)">7055-7472-0213</span>
+                        <a href="https://www.fortnite.com/@leveloxstudios/7055-7472-0213?lang=en-US">Play Now</a>
+                    </div>
+                </div>
+                <img src="https://cdn-0001.qstv.on.epicgames.com/wrfNWqVRHOYsGfMrld/image/landscape_comp.jpeg" alt="Roblox: Tycoon World">
+            </div>
+
+            <div class="game-item">
+                <div>
+                    <div class="description-box">
+                        <h3>Orbit UP</h3>
+                        <p>Welcome to Orbit Up! 🚀 Embark on an exciting space adventure with up to four friends as you journey from the moon to the stunning rings of Saturn. Explore a breathtaking, space-themed environment filled with futuristic obstacles and dazzling cosmic scenery. Starting at the moon, you'll climb 340 meters to reach the majestic rings of Saturn—can you conquer this epic challenge? Before diving into your journey, meet and interact with up to 16 players in the dynamic lobby. Share tips, challenge friends, and prepare for the ultimate cosmic odyssey. Ready for an out-of-this-world experience? Join now and start your climb to Saturn's rings! 🌌✨🌠🪐</p>
+                    </div>
+                    <div class="action-container">
+                        <a href="https://www.roblox.com/games/18705188796/UPDATE-Orbit-UP">Play Now</a>
+                    </div>
+                </div>
+                <img src="https://tr.rbxcdn.com/180DAY-fa3e686859008a34d7fb0ddd34b93a8e/150/150/Image/Webp/noFilter" alt="Roblox: Tycoon World">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-social">
+            <a href="https://x.com/LeveloxStudios" target="_blank">X</a>
+            <a href="https://www.instagram.com/leveloxstudios/" target="_blank">Instagram</a>
+            <a href="https://www.youtube.com/@LeveloxStudios" target="_blank">YouTube</a>
+            <a href="https://www.tiktok.com/@leveloxstudios" target="_blank">TikTok</a>
+            <a href="https://discord.gg/JFyBknT4Qk" target="_blank">Discord</a>
+            <a href="privacypolicy.html" target="_blank">Privacy Policy</a>
+        </div>
+        <p>© 2024 Levelox Studios. All rights reserved.</p>
+        <img src="Favicon.png" alt="Levelox Logo" class="footer-logo">
+    </footer>
+</body>
+</html>
